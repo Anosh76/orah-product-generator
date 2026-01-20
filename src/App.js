@@ -173,8 +173,18 @@ export default function App() {
     if (clientAbbr) sku += `-${clientAbbr}`;
     sku += `-${formData.skuNumber}`;
 
-    const learning = learningExamples.find(l => l.product.toLowerCase() === formData.product.toLowerCase());
-    let description = learning ? learning.desc : `Beautiful ${formData.stone} ${formData.product} in ${formData.metal}.`;
+    // Find matching description by BOTH stone AND product
+    const learning = learningExamples.find(l => 
+      l.stone.toLowerCase() === formData.stone.toLowerCase() && 
+      l.product.toLowerCase() === formData.product.toLowerCase()
+    );
+    
+    // If no exact match, find by product type only
+    let description = learning?.desc;
+    if (!description) {
+      const byProduct = learningExamples.find(l => l.product.toLowerCase() === formData.product.toLowerCase());
+      description = byProduct?.desc || `Beautiful handcrafted ${formData.stone} ${formData.product} in ${formData.metal}. Expertly designed by Orah Jewels & Crafts with traditional craftsmanship and modern elegance.`;
+    }
 
     const newProduct = {
       id: Date.now(),
@@ -304,7 +314,8 @@ export default function App() {
 
             {/* Image Upload */}
             <div className="bg-purple-50 rounded-lg shadow p-4 border border-purple-200">
-              <h2 className="font-bold text-purple-900 mb-2 text-sm">📸 Image Analysis</h2>
+              <h2 className="font-bold text-purple-900 mb-2 text-sm">📸 Image Upload</h2>
+              <p className="text-xs text-purple-800 mb-2">Upload a photo of your product (for reference)</p>
               <button
                 onClick={() => fileInputRef.current?.click()}
                 className="w-full bg-purple-600 text-white py-2 rounded text-sm font-bold mb-2"
@@ -320,19 +331,7 @@ export default function App() {
               />
               {uploadedImage && (
                 <div>
-                  <img src={uploadedImage} alt="Product" className="w-full h-24 object-cover rounded mb-2" />
-                  {analyzing ? <p className="text-xs text-purple-800">Analyzing...</p> : null}
-                  {imageAnalysis && !analyzing && (
-                    <div>
-                      <p className="text-xs text-purple-800 mb-2">{imageAnalysis}</p>
-                      <button
-                        onClick={useImageAnalysis}
-                        className="w-full bg-green-500 text-white py-1 rounded text-xs"
-                      >
-                        Use Analysis
-                      </button>
-                    </div>
-                  )}
+                  <img src={uploadedImage} alt="Product" className="w-full h-24 object-cover rounded" />
                 </div>
               )}
             </div>
