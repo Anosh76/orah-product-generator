@@ -589,6 +589,7 @@ export default function ProductGenerator() {
                       <div>
                         <h3 className="font-bold text-amber-900 text-lg">{product.productName}</h3>
                         <p className="text-sm text-gray-600">SKU: <span className="font-mono bg-amber-50 px-2 py-1 rounded">{product.sku}</span></p>
+
 </div>
 <div className="flex gap-2">
                     <button
